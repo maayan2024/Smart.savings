@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחשבון חסכון חכם</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background-color: #0056b3;
+            color: white;
+            padding: 30px 0;
+            border-radius: 8px;
+            position: relative;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .calculator-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #003d82;
+        }
+        .result-container {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #e8f4ff;
+            display: none;
+        }
+        .result-container h3 {
+            margin-top: 0;
+            color: #0056b3;
+        }
+        .result-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .result-card {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .result-card h4 {
+            margin-top: 0;
+            color: #0056b3;
+        }
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .contact-info {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .whatsapp-btn {
+            display: inline-block;
+            background-color: #25d366;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .risk-options {
+            display: flex;
+            gap: 10px;
+        }
+        .risk-option {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .risk-option.selected {
+            background-color: #0056b3;
+            color: white;
+            border-color: #0056b3;
+        }
+        .risk-rate {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        #chart-container {
+            height: 300px;
+            margin-top: 30px;
+        }
+        .logo {
+            max-width: 180px;
+            margin-bottom: 15px;
+        }
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .footer-logo {
+            max-width: 150px;
+            margin-bottom: 15px;
+        }
+        .disclaimer {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #555;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .risk-options {
+                flex-direction: column;
+            }
+            .result-details {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="https://mosheeliyahu.co.il/wp-content/uploads/2023/11/%D7%9E%D7%A9%D7%94-%D7%90%D7%9C%D7%99%D7%94%D7%95-%D7%9C%D7%95%D7%92%D7%95-e1700475817150.png" alt="משה אליהו - יועץ פיננסי" class="logo">
+            </div>
+            <h1>מחשבון חסכון חכם</h1>
+            <div class="subtitle">אתה כבר בדרך ליעד שלך!</div>
+        </header>
+
+        <div class="calculator-container">
+            <h2>מחשבון ריבית דריבית הפוך</h2>
+            <p>הזן את הנתונים שלך וגלה כמה עליך לחסוך על מנת להגיע ליעד שלך</p>
+
+            <div class="form-group">
+                <label for="target-amount">סכום יעד (₪)</label>
+                <input type="number" id="target-amount" placeholder="הזן את הסכום שברצונך לצבור" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="current-age">גיל נוכחי</label>
+                <input type="number" id="current-age" placeholder="הזן את הגיל הנוכחי שלך" min="18" max="90">
+            </div>
+
+            <div class="form-group">
+                <label for="target-age">גיל יעד</label>
+                <input type="number" id="target-age" placeholder="הזן את הגיל בו תרצה להגיע ליעד" min="19" max="100">
+            </div>
+
+            <div class="form-group">
+                <label for="initial-investment">השקעה ראשונית (₪)</label>
+                <input type="number" id="initial-investment" placeholder="הזן סכום התחלתי אם יש" min="0" value="0">
+            </div>
+
+            <div class="form-group">
+                <label>רמת סיכון ותשואה שנתית</label>
+                <div class="risk-options">
+                    <div class="risk-option" data-rate="3" onclick="selectRisk(this)">
+                        <h4>סיכון נמוך</h4>
+                        <div class="risk-rate">3%</div>
+                        <p>השקעה בטוחה יחסית עם תשואה יציבה</p>
+                    </div>
+                    <div class="risk-option" data-rate="4" onclick="selectRisk(this)">
+                        <h4>סיכון בינוני</h4>
+                        <div class="risk-rate">4%</div>
+                        <p>תשואה טובה עם סיכון מאוזן</p>
+                    </div>
+                    <div class="risk-option" data-rate="8" onclick="selectRisk(this)">
+                        <h4>סיכון גבוה</h4>
+                        <div class="risk-rate">8%</div>
+                        <p>פוטנציאל לתשואה גבוהה עם סיכון מוגבר</p>
+                    </div>
+                </div>
+                <input type="hidden" id="interest-rate" value="4">
+                <div class="disclaimer">
+                    התשואה אינה מובטחת והיא תלויה בתנודתיות השווקים, כך שעלולות להיות סטיות מהציפיות והרווחים עשויים להשתנות
+                </div>
+            </div>
+
+            <button id="calculate-btn" onclick="calculateSavings()">חשב את תכנית החסכון שלי</button>
+
+            <div id="result-container" class="result-container">
+                <h3>תוצאות החישוב</h3>
+                <div class="result-details">
+                    <div class="result-card">
+                        <h4>הפקדה חודשית נדרשת</h4>
+                        <p id="monthly-deposit-result">₪0</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>סך הפקדות</h4>
+                        <p id="total-deposits-result">₪0</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>רווח מריבית</h4>
+                        <p id="interest-earned-result">₪0</p>
+                    </div>
+                </div>
+                <div id="chart-container"></div>
+                <div class="disclaimer">
+                    התשואה אינה מובטחת והיא תלויה בתנודתיות השווקים, כך שעלולות להיות סטיות מהציפיות והרווחים עשויים להשתנות
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="logo-container">
+                <a href="https://mosheeliyahu.co.il/" target="_blank">
+                    <img src="https://mosheeliyahu.co.il/wp-content/uploads/2023/11/%D7%9E%D7%A9%D7%94-%D7%90%D7%9C%D7%99%D7%94%D7%95-%D7%9C%D7%95%D7%92%D7%95-e1700475817150.png" alt="משה אליהו - יועץ פיננסי" class="footer-logo">
+                </a>
+            </div>
+            <div class="contact-info">
+                לפתיחת חסכון וייעוץ:<br>
+                משה אליהו<br>
+                נייד: 050-2070735
+            </div>
+            <a href="https://wa.me/972502070735" class="whatsapp-btn" target="_blank">פתח שיחה בוואטסאפ</a>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script>
+        let selectedRiskOption = null;
+        let chart = null;
+
+        // בחירת רמת סיכון
+        function selectRisk(element) {
+            // הסר את הבחירה הקודמת
+            if (selectedRiskOption) {
+                selectedRiskOption.classList.remove('selected');
+            }
+            
+            // הוסף בחירה לאלמנט הנוכחי
+            element.classList.add('selected');
+            selectedRiskOption = element;
+            
+            // עדכן את שיעור הריבית
+            document.getElementById('interest-rate').value = element.getAttribute('data-rate');
+        }
+
+        // אתחול עם ברירת מחדל של סיכון בינוני
+        document.addEventListener('DOMContentLoaded', function() {
+            const mediumRisk = document.querySelector('.risk-option[data-rate="4"]');
+            selectRisk(mediumRisk);
+        });
+
+        function calculateSavings() {
+            // קבלת הנתונים מהטופס
+            const targetAmount = parseFloat(document.getElementById('target-amount').value);
+            const currentAge = parseInt(document.getElementById('current-age').value);
+            const targetAge = parseInt(document.getElementById('target-age').value);
+            const initialInvestment = parseFloat(document.getElementById('initial-investment').value) || 0;
+            const interestRate = parseFloat(document.getElementById('interest-rate').value) / 100;
+            
+            // בדיקת תקינות הנתונים
+            if (!targetAmount || !currentAge || !targetAge || targetAge <= currentAge) {
+                alert('נא להזין את כל הנתונים בצורה תקינה. גיל היעד חייב להיות גדול מהגיל הנוכחי.');
+                return;
+            }
+            
+            // חישוב מספר החודשים
+            const years = targetAge - currentAge;
+            const months = years * 12;
+            
+            // חישוב הפקדה חודשית נדרשת (נוסחת ריבית דריבית הפוכה)
+            // PMT = (FV - PV * (1 + r)^n) / (((1 + r)^n - 1) / r)
+            // כאשר:
+            // PMT = הפקדה חודשית
+            // FV = סכום יעד
+            // PV = השקעה ראשונית
+            // r = ריבית חודשית
+            // n = מספר חודשים
+            
+            const monthlyRate = interestRate / 12;
+            const futureValueOfInitial = initialInvestment * Math.pow(1 + monthlyRate, months);
+            const remainingToSave = targetAmount - futureValueOfInitial;
+            
+            let monthlyDeposit = 0;
+            if (remainingToSave > 0) {
+                const factor = (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
+                monthlyDeposit = remainingToSave / factor;
+            }
+            
+            // חישוב סך ההפקדות
+            const totalDeposits = initialInvestment + (monthlyDeposit * months);
+            
+            // חישוב הרווח מריבית
+            const interestEarned = targetAmount - totalDeposits;
+            
+            // הצגת התוצאות
+            document.getElementById('monthly-deposit-result').textContent = '₪' + Math.ceil(monthlyDeposit).toLocaleString();
+            document.getElementById('total-deposits-result').textContent = '₪' + Math.ceil(totalDeposits).toLocaleString();
+            document.getElementById('interest-earned-result').textContent = '₪' + Math.ceil(interestEarned).toLocaleString();
+            
+            // הצג את מיכל התוצאות
+            document.getElementById('result-container').style.display = 'block';
+            
+            // יצירת הגרף
+            createChart(initialInvestment, monthlyDeposit, months, monthlyRate);
+        }
+        
+        function createChart(initialInvestment, monthlyDeposit, months, monthlyRate) {
+            const labels = [];
+            const savingsData = [];
+            const interestData = [];
+            
+            let currentSavings = initialInvestment;
+            let totalDeposits = initialInvestment;
+            
+            for (let i = 0; i <= months; i += Math.max(1, Math.floor(months / 12))) {
+                if (i === 0) {
+                    // ערך התחלתי
+                    labels.push('התחלה');
+                    savingsData.push(currentSavings);
+                    interestData.push(0);
+                } else {
+                    // חישוב הערכים לחודש הנוכחי
+                    for (let j = 0; j < (i - savingsData.length * Math.max(1, Math.floor(months / 12)) + Math.max(1, Math.floor(months / 12))); j++) {
+                        currentSavings = (currentSavings * (1 + monthlyRate)) + monthlyDeposit;
+                        totalDeposits += monthlyDeposit;
+                    }
+                    
+                    const yearLabel = Math.floor(i / 12);
+                    labels.push(`שנה ${yearLabel}`);
+                    savingsData.push(currentSavings);
+                    interestData.push(currentSavings - totalDeposits);
+                }
+            }
+            
+            // עדכון או יצירת גרף חדש
+            const ctx = document.getElementById('chart-container');
+            
+            if (chart) {
+                chart.destroy();
+            }
+            
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'סך החיסכון',
+                            data: savingsData,
+                            backgroundColor: 'rgba(0, 86, 179, 0.2)',
+                            borderColor: 'rgba(0, 86, 179, 1)',
+                            borderWidth: 2,
+                            fill: true
+                        },
+                        {
+                            label: 'רווח מריבית',
+                            data: interestData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₪' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
